@@ -3,10 +3,10 @@
     email = your_email@example.com
 
 [init]
-    defaultBranch = main
+	defaultBranch = main
 
 [pull]
-    rebase = false
+	rebase = false
 
 [core]
     editor = nvim
