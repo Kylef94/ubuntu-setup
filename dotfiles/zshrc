@@ -1,0 +1,61 @@
+# ~/.zshrc
+
+[ -f "$HOME/.config/shell/env.sh" ] && source "$HOME/.config/shell/env.sh"
+
+# History
+HISTSIZE=5000
+SAVEHIST=10000
+HISTFILE="$HOME/.zsh_history"
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt SHARE_HISTORY
+
+# Completion
+autoload -Uz compinit
+compinit
+
+# Prompt
+PROMPT='%n@%m:%~ %# '
+
+# ssh-agent
+if [ -z "${SSH_AUTH_SOCK:-}" ] && [ -f "$HOME/.ssh/id_ed25519" ]; then
+  eval "$(ssh-agent -s)" >/dev/null 2>&1
+  ssh-add "$HOME/.ssh/id_ed25519" >/dev/null 2>&1 || true
+fi
+
+# Aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git pull'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# Prefer modern tools if available
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza'
+  alias ll='eza -lah'
+  alias la='eza -a'
+fi
+
+if command -v batcat >/dev/null 2>&1; then
+  alias cat='batcat'
+elif command -v bat >/dev/null 2>&1; then
+  alias cat='bat'
+fi
+
+if command -v fdfind >/dev/null 2>&1; then
+  alias fd='fdfind'
+fi
+
+# fzf integration if available
+[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+[ -f /usr/share/doc/fzf/examples/completion.zsh ] && source /usr/share/doc/fzf/examples/completion.zsh
+
+# Local overrides
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+

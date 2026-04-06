@@ -1,0 +1,6 @@
+[window]
+padding = { x = 6, y = 6 }
+
+[font]
+size = 11.0
+
