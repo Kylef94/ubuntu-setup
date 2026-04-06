@@ -4,34 +4,9 @@ set -Eeuo pipefail
 SCRIPT_NAME="$(basename "$0")"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$REPO_DIR/dotfiles"
-
-log() {
-  printf '\n[%s] %s\n' "$SCRIPT_NAME" "$1"
-}
-
-warn() {
-  printf '\n[%s] WARNING: %s\n' "$SCRIPT_NAME" "$1" >&2
-}
-
-die() {
-  printf '\n[%s] ERROR: %s\n' "$SCRIPT_NAME" "$1" >&2
-  exit 1
-}
-
-trap 'die "Command failed at line $LINENO."' ERR
-
-require_cmd() {
-  command -v "$1" >/dev/null 2>&1 || die "Required command not found: $1"
-}
-
-is_wsl() {
-  grep -qi microsoft /proc/version 2>/dev/null
-}
-
-ensure_dir() {
-  local dir="$1"
-  mkdir -p "$dir"
-}
+# shellcheck source=common.sh
+source "$REPO_DIR/common.sh"
+setup_error_trap
 
 write_file_if_changed() {
   local target="$1"
@@ -213,11 +188,6 @@ main() {
   echo "----------------------------------------"
   cat "$HOME/.ssh/id_ed25519.pub"
   echo "----------------------------------------"
-  echo
-  echo "Add that key to GitHub if you have not already."
-  echo "Then test with: ssh -T git@github.com"
-  echo "Reload shell with: source ~/.zshrc"
 }
 
 main "$@"
-

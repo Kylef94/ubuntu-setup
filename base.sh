@@ -2,29 +2,11 @@
 set -Eeuo pipefail
 
 SCRIPT_NAME="$(basename "$0")"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=common.sh
+source "$REPO_DIR/common.sh"
 
-log() {
-  printf '\n[%s] %s\n' "$SCRIPT_NAME" "$1"
-}
-
-warn() {
-  printf '\n[%s] WARNING: %s\n' "$SCRIPT_NAME" "$1" >&2
-}
-
-die() {
-  printf '\n[%s] ERROR: %s\n' "$SCRIPT_NAME" "$1" >&2
-  exit 1
-}
-
-trap 'die "Command failed at line $LINENO."' ERR
-
-require_cmd() {
-  command -v "$1" >/dev/null 2>&1 || die "Required command not found: $1"
-}
-
-is_wsl() {
-  grep -qi microsoft /proc/version 2>/dev/null
-}
+setup_error_trap
 
 apt_install() {
   local packages=("$@")
