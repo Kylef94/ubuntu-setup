@@ -1,46 +1,14 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-SCRIPT_NAME="$(basename "$0")"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=common.sh
 source "$REPO_DIR/common.sh"
-
+get_script_name
 setup_error_trap
 
 UV_INSTALL_DIR="${UV_INSTALL_DIR:-$HOME/.local/bin}"
 PYTHON_VERSION="${PYTHON_VERSION:-3.14.3}"
-
-write_file_if_changed() {
-  local target="$1"
-  local tmp
-  tmp="$(mktemp)"
-  cat > "$tmp"
-
-  if [ -f "$target" ] && cmp -s "$tmp" "$target"; then
-    rm -f "$tmp"
-    log "No changes needed for $target"
-    return
-  fi
-
-  mv "$tmp" "$target"
-  log "Wrote $target"
-}
-
-ensure_line_in_file() {
-  local file="$1"
-  local line="$2"
-
-  touch "$file"
-
-  if grep -Fqx "$line" "$file"; then
-    log "Line already present in $file"
-    return
-  fi
-
-  printf '\n%s\n' "$line" >> "$file"
-  log "Updated $file"
-}
 
 install_uv() {
   if command -v uv >/dev/null 2>&1; then
