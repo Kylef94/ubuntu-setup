@@ -29,7 +29,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias gs='git status'
 alias ga='git add'
-alias gc='git commit'
+alias gc='git commit -m'
 alias gp='git push'
 alias gl='git pull'
 alias ..='cd ..'
@@ -58,4 +58,5 @@ fi
 
 # Local overrides
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
 
